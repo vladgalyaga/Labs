@@ -23,24 +23,6 @@ namespace ChartUI
         {
             InitializeComponent();
             chart.Series.Clear();
-
-            //Chart myChart = new Chart();
-            ////кладем его на форму и растягиваем на все окно.
-            //myChart.Parent = this;
-            //myChart.Dock = DockStyle.Fill;
-            //myChart.ChartAreas.Add(new ChartArea("Math functions"));
-            ////Создаем и настраиваем набор точек для рисования графика, в том
-            ////не забыв указать имя области на которой хотим отобразить этот
-            ////набор точек.
-            //Series mySeriesOfPoint = new Series("Sinus");
-            //mySeriesOfPoint.ChartType = SeriesChartType.Line;
-            //mySeriesOfPoint.ChartArea = "Math functions";
-            //for (double x = -Math.PI; x <= Math.PI; x += Math.PI / 10.0)
-            //{
-            //    mySeriesOfPoint.Points.AddXY(x, Math.Sin(x));
-            //}
-            ////Добавляем созданный набор точек в Chart
-            //myChart.Series.Add(mySeriesOfPoint);
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -85,24 +67,93 @@ namespace ChartUI
             planedPoints.ChartType = SeriesChartType.Line;
             planedPoints.ChartArea = "Math functions";
 
+
+            Series calculatedPoints = new Series("Calculated bu forecast");
+            calculatedPoints.ChartType = SeriesChartType.Line;
+            calculatedPoints.ChartArea = "Math functions";
+
+            Series calculatedPoints2 = new Series("Calculated by historical");
+            calculatedPoints2.ChartType = SeriesChartType.Line;
+            calculatedPoints2.ChartArea = "Math functions";
+
+
             _expenses.ForEach(x =>
             {
                 historicalPoints.Points.AddXY(x.Date, x.HistoricalValue);
                 planedPoints.Points.AddXY(x.Date, x.Forecast);
+                calculatedPoints.Points.AddXY(x.Date, x.CalculatedBeterValue);
+                calculatedPoints2.Points.AddXY(x.Date, x.CalculatedWorstValue);
             });
 
             //Добавляем созданный набор точек в Chart
             chart.Series.Add(planedPoints);
             chart.Series.Add(historicalPoints);
+            chart.Series.Add(calculatedPoints);
+            chart.Series.Add(calculatedPoints2);
         }
 
         private void calculateToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Expenses tmp;
-            for (int i = 0; i < _expenses.Count; i++)
-            {
+            var historicalData = _expenses.Where(x => x.HistoricalValue != null);
+            double historicalDataCount = historicalData.Count();
+            double startCof = (historicalDataCount - 1) / historicalDataCount;
 
+            double summOfDelta = 0;
+            double summOfDeltaHistorical = 0;
+            double sumOfCof = 0;
+            int dataCount = 0;
+
+            Expenses tmp = null;
+            foreach (var data in _expenses)
+            {
+                data.DeltaHistorical = data.HistoricalValue - (tmp?.HistoricalValue ?? 0);
+                tmp = data;
             }
+
+            foreach (var data in historicalData.OrderByDescending(x => x.Date))
+            {
+                var cof = Math.Pow(startCof, dataCount);
+                sumOfCof += cof;
+
+                summOfDelta += cof * data.GetAdditionalExpenses() ?? 0;
+                summOfDeltaHistorical += cof * data.DeltaHistorical ?? 0;
+
+                dataCount++;
+            }
+
+            var forecastDelta = summOfDelta / sumOfCof;
+            var historicalDelta = summOfDeltaHistorical / sumOfCof;
+            foreach (var data in _expenses)
+            {
+                data.CalculatedBeterValue = data.Forecast + forecastDelta;
+            }
+
+            tmp = null;
+            foreach (var data in _expenses)
+            {
+                if (data.DeltaHistorical != null)
+                {
+                    tmp = data;
+                    continue;
+                }
+
+                if(data.CalculatedWorstValue == null)
+                {
+                    data.CalculatedWorstValue = (tmp?.HistoricalValue ?? tmp?.CalculatedWorstValue) + historicalDelta;
+                }
+                tmp = data;
+            }
+
+
+            DrawChart();
+
+
+
+            //for (int i = 1; i < _expenses.Count; i++)
+            //{
+            //    _expenses[i].DeltaRelativeHistorical = _expenses[i].HistoricalValue / _expenses[i - 1].HistoricalValue;
+            //    _expenses[i].DeltaRelativeForecast = _expenses[i].Forecast / _expenses[i - 1].Forecast;
+            //}
         }
     }
 }

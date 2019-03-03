@@ -25,9 +25,11 @@ namespace LabWithFeliks
         public double? CalculatedWorstValue { get; set; }
 
 
-        public double DeltaRelativeForecast { get; set; }
+        public double? DeltaRelativeForecast { get; set; }
 
-        public double DeltaRelativeHistorical { get; set; }
+        public double? DeltaRelativeHistorical { get; set; }
+
+        public double? DeltaHistorical { get; set; }
 
         public double? GetAdditionalExpenses()
         {
