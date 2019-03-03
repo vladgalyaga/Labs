@@ -10,10 +10,10 @@ namespace SCV.IO
 {
     public class CSVReader
     {
-        public IEnumerable<TEntity> ReadText<TEntity>(List<string> csv, char separator = ',') where TEntity : new()
+        public IEnumerable<TEntity> ReadText<TEntity>(List<string> csv, char separator = ';') where TEntity : new()
         {
             List<TEntity> result = new List<TEntity>();
-            if (csv?.Any() ?? true)
+            if (!(csv?.Any() ?? false))
                 return null;
 
             var columnsIntText = csv.First().Split(separator).ToList();
@@ -41,7 +41,7 @@ namespace SCV.IO
 
                     var prop = columnToProperty[i];
                     object cellValue;
-                    if (prop.ColumnAttribute.Reader == null)
+                    if (prop.ColumnAttribute.Reader != null)
                     {
                         cellValue = prop.ColumnAttribute.Reader.ReadProperty(values[i]);
                     }

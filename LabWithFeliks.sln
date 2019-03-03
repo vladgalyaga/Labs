@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabWithFeliks", "LabWithFel
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCV.IO", "SCV.IO\SCV.IO.csproj", "{08C0A0AF-7E90-4724-9105-B7959661FA97}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChartUI", "ChartUI\ChartUI.csproj", "{0DA3CAD1-9B23-4E2E-87B0-C6C93648F870}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{08C0A0AF-7E90-4724-9105-B7959661FA97}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08C0A0AF-7E90-4724-9105-B7959661FA97}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08C0A0AF-7E90-4724-9105-B7959661FA97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DA3CAD1-9B23-4E2E-87B0-C6C93648F870}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DA3CAD1-9B23-4E2E-87B0-C6C93648F870}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DA3CAD1-9B23-4E2E-87B0-C6C93648F870}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DA3CAD1-9B23-4E2E-87B0-C6C93648F870}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

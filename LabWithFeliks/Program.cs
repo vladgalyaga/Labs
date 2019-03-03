@@ -10,7 +10,7 @@ namespace LabWithFeliks
     {
         static void Main(string[] args)
         {
-
+            
         }
     }
 }
